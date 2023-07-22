@@ -15,26 +15,28 @@ func isSupportedCountry(countryCode string) bool{
   }
 }
 
-func reorderNames(firstName string, lastName string, countryCode string, middleName string) string {
+func buildName(firstName string, middleName string, lastName string) string {
   var result []string;
+  result = []string{firstName};
+  if middleName != "" {
+    result = append(result, middleName);
+  }
+  result = append(result, lastName)
+
+  return strings.Join(result, " ");
+}
+
+func reorderNames(firstName string, lastName string, countryCode string, middleName string) string {
   switch (countryCode) {
     case "VN": {
-      result = []string{lastName};
-      if middleName != "" {
-        result = append(result, middleName);
-      }
-      result = append(result, firstName)
+      return buildName(lastName, middleName, firstName)
     }
     case "US": {
-      result = []string{firstName};
-      if middleName != "" {
-        result = append(result, middleName);
-      }
-      result = append(result, lastName)
+      return buildName(firstName, middleName, lastName)
     }
   }
-  
-  return strings.Join(result, " ");
+
+  return ""
 } 
 
 func main() {
@@ -46,7 +48,7 @@ func main() {
     return;
   }
   
-  countryCode := props[lenProps-1]
+  countryCode := strings.ToUpper(props[lenProps-1])
   if (!isSupportedCountry(countryCode)){
     fmt.Println("Not supported country")
     return;
